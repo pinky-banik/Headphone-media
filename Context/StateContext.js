@@ -7,8 +7,8 @@ const Context = createContext();
 const StateContext = ({children}) => {
     const [showCart,setShowCart] = useState(false);
     const [cartItems,setCartItems] = useState([]);
-    const [totalPrice,setTotalPrice] = useState();
-    const [totalQuantities,setTotalQuantities] = useState();
+    const [totalPrice,setTotalPrice] = useState(0);
+    const [totalQuantities,setTotalQuantities] = useState(0);
     const[qnty,setQnty] = useState(1);
     const onAdd = (product,quantity) =>{
         const checkProductInCart = cartItems.find((item)=> item._id === product._id);
@@ -33,6 +33,7 @@ const StateContext = ({children}) => {
     }
 
 
+    
     const incrsQnty = () => {
         setQnty((prevQnty)=> prevQnty+1)
     }
@@ -45,6 +46,7 @@ const StateContext = ({children}) => {
     return (
        <Context.Provider value={{
            showCart,
+           setShowCart,
            cartItems,
            totalPrice,
            totalQuantities,
