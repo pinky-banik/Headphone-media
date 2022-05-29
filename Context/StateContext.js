@@ -1,6 +1,7 @@
 import React from 'react';
 import { createContext, useState ,useContext} from 'react';
 import toast from 'react-hot-toast';
+import Product from './../components/Product';
 
 
 const Context = createContext();
@@ -10,6 +11,10 @@ const StateContext = ({children}) => {
     const [totalPrice,setTotalPrice] = useState(0);
     const [totalQuantities,setTotalQuantities] = useState(0);
     const[qnty,setQnty] = useState(1);
+
+    let foundProduct;
+    let index;
+
     const onAdd = (product,quantity) =>{
         const checkProductInCart = cartItems.find((item)=> item._id === product._id);
         
@@ -32,7 +37,23 @@ const StateContext = ({children}) => {
         toast.success(`${qnty} ${product.name} added to the cart`); 
     }
 
+    const toggleCartItemQuantity = (id,value)=>{
+        foundProduct = cartItems.find((item) => item._id ===id);
+        index = cartItems.findIndex((product)=> product._id ===id);
 
+        if(value === 'incrs'){
+            setCartItems([...cartItems,{...foundProduct,quantity: foundProduct.quantity +1}]);
+            setTotalPrice((prevTotalPrice)=>prevTotalPrice + foundProduct.price);
+            setTotalQuantities((prevTotalQuantities)=> prevTotalQuantities+1);
+        }else if (value ==='decrs'){
+            if(foundProduct.quantity>1){
+                setCartItems([...cartItems,{...foundProduct,quantity: foundProduct.quantity -1}]);
+            setTotalPrice((prevTotalPrice)=>prevTotalPrice - foundProduct.price);
+            setTotalQuantities((prevTotalQuantities)=> prevTotalQuantities - 1);
+            }
+
+        }
+    }
     
     const incrsQnty = () => {
         setQnty((prevQnty)=> prevQnty+1)
@@ -53,7 +74,8 @@ const StateContext = ({children}) => {
            qnty,
            incrsQnty,
            dcrsQnty,
-           onAdd
+           onAdd,
+           toggleCartItemQuantity
        }}>
            {children}
        </Context.Provider>
